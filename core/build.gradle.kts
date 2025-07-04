@@ -1,23 +1,18 @@
 plugins {
-    alias(libs.plugins.android.application)
-    alias(libs.plugins.ksp)
+    alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
-    namespace = "com.serhiihrabas.indicado"
+    namespace = "com.serhiihrabas.core"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.serhiihrabas.indicado"
         minSdk = 28
-        targetSdk = 36
-        versionCode = 1
-        versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles("consumer-rules.pro")
     }
 
     buildTypes {
@@ -38,26 +33,25 @@ android {
     }
     buildFeatures {
         buildConfig = true
-        compose = true
     }
 }
 
 dependencies {
-    implementation(project(":core"))
-    implementation(project(":obl-energo"))
-
     api(libs.androidx.core.ktx)
     api(libs.androidx.lifecycle.runtime.ktx)
     api(libs.androidx.activity.compose)
     api(platform(libs.androidx.compose.bom))
     api(libs.bundles.compose)
     api(libs.androidx.material3)
+    api(libs.material3.adaptive)
+    api(libs.androidx.material.icons.extended)
+    api(libs.kotlinx.serialization.json)
+
+    implementation(libs.bundles.koin)
+    implementation(libs.bundles.ktor)
+    implementation(libs.timber)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.ui.test.junit4)
-    debugImplementation(libs.androidx.ui.tooling)
-    debugImplementation(libs.androidx.ui.test.manifest)
 }

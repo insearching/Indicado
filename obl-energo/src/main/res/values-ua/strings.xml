@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="last_name">Прізвище</string>
+    <string name="last_name_cyrillic">Прізвище (кирилицею)</string>
+    <string name="date_indicator_receipt">Дата зняття показника</string>
+    <string name="personal_account_number_label">Особовий рахунок: 10 символів 2 (код району) (особовий рахунок)</string>
+    <string name="send_electricity_indicators_title">Тернопільелектроенерго</string>
+    <string name="enter_your_data_here_description">Введіть ваші показники тут…</string>
+    <string name="send_indicators">Надіслати показники</string>
+</resources>

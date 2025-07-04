@@ -1,5 +1,3 @@
 <resources>
     <string name="app_name" translatable="false">Indicado</string>
-    <string name="last_name">Last name</string>
-    <string name="date_indicator_receipt">Date indicator receipt</string>
 </resources>

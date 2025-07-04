@@ -1,4 +1,4 @@
-package com.serhiihrabas.indicado.ui.theme
+package com.serhiihrabas.core.presentation.theme
 
 import androidx.compose.ui.graphics.Color
 

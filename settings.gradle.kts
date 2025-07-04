@@ -21,4 +21,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "Indicado"
 include(":app")
- 
+include(":core")
+include(":obl-energo")

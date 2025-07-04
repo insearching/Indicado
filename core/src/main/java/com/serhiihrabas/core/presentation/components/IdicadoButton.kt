@@ -1,4 +1,4 @@
-package com.serhiihrabas.indicado.presentation.components
+package com.serhiihrabas.core.presentation.components
 
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -14,7 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.serhiihrabas.indicado.ui.theme.IndicadoTheme
+import com.serhiihrabas.core.presentation.theme.IndicadoTheme
 
 @Composable
 fun IndicadoButton(
