@@ -103,8 +103,7 @@ fun TernopilOblEnergyScreen(
                     HeaderSection()
                     FormSection(
                         state = state,
-                        onAction = onAction,
-                        modifier = rootModifier
+                        onAction = onAction
                     )
                 }
             }
@@ -121,8 +120,7 @@ fun TernopilOblEnergyScreen(
                     HeaderSection()
                     FormSection(
                         state = state,
-                        onAction = onAction,
-                        modifier = rootModifier
+                        onAction = onAction
                     )
                 }
             }
@@ -184,6 +182,7 @@ fun FormSection(
     Column(
         verticalArrangement = Arrangement.spacedBy(8.dp),
         modifier = modifier
+            .verticalScroll(rememberScrollState())
     ) {
         IndicadoTextField(
             value = state.accountNumber,
