@@ -1,5 +1,6 @@
 package com.serhiihrabas.indicado.presentation
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -23,37 +24,54 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.serhiihrabas.core.presentation.components.IndicadoButton
 import com.serhiihrabas.core.presentation.components.IndicadoTextField
 import com.serhiihrabas.core.presentation.theme.IndicadoTheme
 import com.serhiihrabas.core.util.DeviceConfiguration
 import com.serhiihrabas.indicado.R
+import com.serhiihrabas.indicado.utils.dateDisplayFormatter
+import com.serhiihrabas.indicado.utils.parseToZonedDateTime
+import org.koin.androidx.compose.koinViewModel
 import java.time.ZonedDateTime
-import java.time.format.DateTimeFormatter
-
-private val dateTimeFormatter = DateTimeFormatter.ofPattern("dd.mm.yyyy")
 
 @Composable
-fun TernopilOblEnergyScreenRoot() {
-    TernopilOblEnergyScreen()
+fun TernopilOblEnergyScreenRoot(
+    viewModel: OblEnergyViewModel = koinViewModel<OblEnergyViewModel>(),
+) {
+    val context = LocalContext.current
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) {
+        viewModel.events.collect { event ->
+            when (event) {
+                is OblEnergyEvent.ShowMessage -> {
+                    Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    TernopilOblEnergyScreen(
+        state = state,
+        onAction = viewModel::onAction
+    )
 }
 
 @Composable
-fun TernopilOblEnergyScreen() {
-    var personalAccountNumber by remember { mutableStateOf("") }
-    var lastName by remember { mutableStateOf("") }
-    var date by remember { mutableStateOf("") }
-
+fun TernopilOblEnergyScreen(
+    state: OblEnergyState,
+    onAction: (OblEnergyAction) -> Unit,
+) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         contentWindowInsets = WindowInsets.statusBars
@@ -84,13 +102,8 @@ fun TernopilOblEnergyScreen() {
                 ) {
                     HeaderSection()
                     FormSection(
-                        personalAccountNumber = personalAccountNumber,
-                        onPersonalAccountNumberChange = { personalAccountNumber = it },
-                        lastName = lastName,
-                        onLastNameChange = { lastName = it },
-                        date = date,
-                        onDateChange = { date = it },
-                        onIndicatorsSend = { /* TODO: Send indicators */ },
+                        state = state,
+                        onAction = onAction,
                         modifier = rootModifier
                     )
                 }
@@ -107,13 +120,8 @@ fun TernopilOblEnergyScreen() {
                 ) {
                     HeaderSection()
                     FormSection(
-                        personalAccountNumber = personalAccountNumber,
-                        onPersonalAccountNumberChange = { personalAccountNumber = it },
-                        lastName = lastName,
-                        onLastNameChange = { lastName = it },
-                        date = date,
-                        onDateChange = { date = it },
-                        onIndicatorsSend = { /* TODO: Send indicators */ },
+                        state = state,
+                        onAction = onAction,
                         modifier = rootModifier
                     )
                 }
@@ -136,13 +144,8 @@ fun TernopilOblEnergyScreen() {
                         alignment = Alignment.CenterHorizontally
                     )
                     FormSection(
-                        personalAccountNumber = personalAccountNumber,
-                        onPersonalAccountNumberChange = { personalAccountNumber = it },
-                        lastName = lastName,
-                        onLastNameChange = { lastName = it },
-                        date = date,
-                        onDateChange = { date = it },
-                        onIndicatorsSend = { /* TODO: Send indicators */ },
+                        state = state,
+                        onAction = onAction,
                         modifier = Modifier
                             .widthIn(max = 540.dp)
                     )
@@ -174,13 +177,8 @@ fun HeaderSection(
 
 @Composable
 fun FormSection(
-    personalAccountNumber: String,
-    onPersonalAccountNumberChange: (String) -> Unit,
-    lastName: String,
-    onLastNameChange: (String) -> Unit,
-    date: String,
-    onDateChange: (String) -> Unit,
-    onIndicatorsSend: () -> Unit,
+    state: OblEnergyState,
+    onAction: (OblEnergyAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -188,30 +186,45 @@ fun FormSection(
         modifier = modifier
     ) {
         IndicadoTextField(
-            value = personalAccountNumber,
-            onValueChange = onPersonalAccountNumberChange,
+            value = state.accountNumber,
+            onValueChange = {
+                onAction(OblEnergyAction.OnAccountNumberChange(it))
+            },
             label = stringResource(R.string.personal_account_number_label),
             placeholder = "2*********",
             digitsOnly = true,
             maxLength = 10
         )
         IndicadoTextField(
-            value = lastName,
-            onValueChange = onLastNameChange,
+            value = state.lastName,
+            onValueChange = {
+                onAction(OblEnergyAction.OnLastNameChange(it))
+            },
             label = stringResource(R.string.last_name_cyrillic),
             placeholder = stringResource(R.string.last_name)
         )
         IndicadoTextField(
-            value = date,
-            onValueChange = onDateChange,
+            value = state.indicatorValue,
+            onValueChange = {
+                onAction(OblEnergyAction.OnIndicatorValueChange(it))
+            },
+            label = stringResource(R.string.indicator_value),
+            placeholder = "0",
+            digitsOnly = true,
+            maxLength = 6
+        )
+        IndicadoTextField(
+            value = state.date.format(dateDisplayFormatter),
+            onValueChange = { onAction(OblEnergyAction.OnDateChange(it.parseToZonedDateTime())) },
             label = stringResource(R.string.date_indicator_receipt),
-            placeholder = ZonedDateTime.now().format(dateTimeFormatter),
-            isDateField = true
+            placeholder = ZonedDateTime.now().format(dateDisplayFormatter),
+            isDateField = true,
+            dateFormat = dateDisplayFormatter
         )
         Spacer(modifier = Modifier.height(24.dp))
         IndicadoButton(
             text = stringResource(R.string.send_indicators),
-            onClick = onIndicatorsSend,
+            onClick = { onAction(OblEnergyAction.OnSendIndicator) },
             modifier = Modifier.align(Alignment.CenterHorizontally)
         )
     }
@@ -221,6 +234,9 @@ fun FormSection(
 @Composable
 private fun TernopilOblEnergyScreenPreview() {
     IndicadoTheme {
-        TernopilOblEnergyScreen()
+        TernopilOblEnergyScreen(
+            state = OblEnergyState(),
+            onAction = {}
+        )
     }
 }

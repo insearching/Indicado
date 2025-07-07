@@ -47,9 +47,9 @@ dependencies {
     api(libs.androidx.material.icons.extended)
     api(libs.kotlinx.serialization.json)
 
-    implementation(libs.bundles.koin)
-    implementation(libs.bundles.ktor)
-    implementation(libs.timber)
+    api(libs.bundles.koin)
+    api(libs.bundles.ktor)
+    api(libs.timber)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

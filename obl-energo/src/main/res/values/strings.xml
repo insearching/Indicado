@@ -1,6 +1,7 @@
 <resources>
     <string name="last_name">Last name</string>
     <string name="last_name_cyrillic">Last name (cyrillic)</string>
+    <string name="indicator_value">Indicator value</string>
     <string name="date_indicator_receipt">Date indicator receipt</string>
     <string name="personal_account_number_label">Personal account: 10 characters 2 (district code) (personal account)</string>
     <string name="send_electricity_indicators_title">TernopilOblEnergo</string>

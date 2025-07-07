@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name" translatable="false">Indicado</string>
+    <string name="ternopil_obl_energo">TernopilOblEnergo</string>
 </resources>
